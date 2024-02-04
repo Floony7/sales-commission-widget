@@ -1,0 +1,2 @@
+export const COMMISSION_BANDS = [5000, 10000, 15000, 20000];
+export const COMMISSION_RATES = [0, 0.1, 0.15, 0.2, 0.25];
