@@ -2,19 +2,20 @@ import styled from 'styled-components';
 
 export const AppWrapper = styled.main`
     width: 100vw;
-    background-color: rgba(0, 0, 0, 0.03);
     display: flex;
     justify-content: center;
-    padding: 0;
+    padding: 0 0 2rem 0;
     margin: 0;
 `;
 
 export const InnerWrapper = styled.section`
     width: 80vw;
+    background: #fff;
     max-width: 2400px;
-    margin-top: 3rem;
-    padding: 2rem;
+    margin-top: 3rem !important;
+    padding: 0.5rem 2rem 2rem 2rem;
     margin: 0;
+    border-radius: var(--default-rounding);
 `;
 
 export const Button = styled.button`

@@ -24,6 +24,7 @@ function App() {
   return (
     <AppWrapper>
       <InnerWrapper>
+        <h2 style={{ fontSize: '1.8rem' }}>Commission calculator</h2>
         <form onSubmit={handleSubmitRevenue}>
           <label style={{ paddingRight: '0.5rem' }}>Enter Revenue Amount</label>
           <input

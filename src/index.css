@@ -8,6 +8,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --default-rounding: 10px;
 }
 
 a {
@@ -23,6 +24,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 button {
