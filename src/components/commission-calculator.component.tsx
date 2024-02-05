@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { commissionScheme } from '../utils/constants';
-import { WidgetGrid, WidgetItem } from './commission-calculator.styles';
+import { WidgetGrid } from './commission-calculator.styles';
+import { WidgetCard } from './card.component';
 // import { CommissionChart } from './commission-chart.component';
+
+export type Breakdown = { band: number; commission: number };
 
 type CommissionBreakdown = {
   totalCommission: number;
-  breakdown: { band: number; commission: number }[];
+  breakdown: Breakdown[];
 };
 
 const initialState = {
@@ -23,29 +26,27 @@ export const CommissionCalculator = ({ revenue }: { revenue: number }): JSX.Elem
   const [commissionBreakdown, setCommissionBreakdown] = useState<CommissionBreakdown>(initialState);
 
   useEffect(() => {
-    const breakdown = calculateCommission(revenue);
-    setCommissionBreakdown(breakdown);
-    console.log(breakdown);
+    setCommissionBreakdown(prevCommissionBreakdown => {
+      const { totalCommission, breakdown } = calculateCommission(revenue);
+      const newCommissionBreakdown = { ...prevCommissionBreakdown, totalCommission, breakdown };
+      return newCommissionBreakdown;
+    });
   }, [revenue]);
 
   return (
     <section>
       <p>
-        Here will bring in the revenue of {isNaN(revenue) ? 0 : revenue} and use the custom hook to
-        run the calculations
+        See a full breakdown of how commission was generated below. <br />
+        Note that any sales under {commissionScheme[1].band} do not generate commission.
       </p>
-      This will render the chart element.
+      <h2>Total Commission: {commissionBreakdown.totalCommission}</h2>
       <WidgetGrid>
         {commissionBreakdown.breakdown.length > 0
           ? commissionBreakdown.breakdown.map(item => (
-              <WidgetItem key={item.band}>
-                {item.band}: {item.commission}
-              </WidgetItem>
+              <WidgetCard band={item.band} commission={item.commission} />
             ))
           : initialState.breakdown.map(item => (
-              <WidgetItem key={item.band}>
-                {item.band}: {item.commission}
-              </WidgetItem>
+              <WidgetCard band={item.band} commission={item.commission} />
             ))}
       </WidgetGrid>
     </section>
