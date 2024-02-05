@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import './App.css';
 import { CommissionCalculator } from './components/commission-calculator.component';
-import { CommissionChart } from './components/commission-chart.component';
+import { AppWrapper, Button, InnerWrapper } from './global.styles';
 
 function App() {
   const [inputAmount, setInputAmount] = useState('');
-  const [revenue, setRevenue] = useState(0);
-  // const revenueInputRef = useRef<HTMLInputElement>(null);
+  const [revenue, setRevenue] = useState(0); // Could omit this state, parseInt and perform calculations on revenue in this component instead
 
   const handleSubmitRevenue = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,26 +22,28 @@ function App() {
   };
   console.log('REVENUE', revenue, inputAmount);
   return (
-    <>
-      <form onSubmit={handleSubmitRevenue}>
-        <label style={{ paddingRight: '0.5rem' }}>Enter Revenue Amount</label>
-        <input
-          type="text"
-          name="revenue"
-          pattern="[0-9]*"
-          inputMode="numeric"
-          placeholder="Enter revenue amount"
-          value={inputAmount}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputAmount(e.target.value)}
-          style={{ padding: '5px 10px', border: '1px solid #ccc', borderRadius: '5px' }}
-        />
-        <button type="submit" style={{ marginLeft: '0.5rem' }}>
-          Submit
-        </button>
-      </form>
-      <CommissionCalculator revenue={revenue} />
-      <CommissionChart />
-    </>
+    <AppWrapper>
+      <InnerWrapper>
+        <form onSubmit={handleSubmitRevenue}>
+          <label style={{ paddingRight: '0.5rem' }}>Enter Revenue Amount</label>
+          <input
+            type="text"
+            name="revenue"
+            pattern="[0-9]*"
+            inputMode="numeric"
+            placeholder="Enter revenue amount"
+            value={inputAmount}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputAmount(e.target.value)}
+            style={{ padding: '5px 10px', border: '1px solid #ccc', borderRadius: '5px' }}
+          />
+          <Button type="submit" style={{ marginLeft: '0.5rem' }}>
+            Submit
+          </Button>
+        </form>
+        <CommissionCalculator revenue={revenue} />
+        {/* <CommissionChart /> */}
+      </InnerWrapper>
+    </AppWrapper>
   );
 }
 
