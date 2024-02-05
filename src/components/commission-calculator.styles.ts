@@ -7,13 +7,16 @@ export const WidgetGrid = styled.section`
 
 export const WidgetItem = styled.div`
     border: 1px solid rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     border-radius: 10px;
     padding: 1.5rem;
+    min-height: 200px;
     height: auto;
-`;
 
-export const WidgetGrid2 = styled.section`
-    display: grid;
-    grid-template-columns: repeat(5, 1fr)
-    gap: 0.5rem;
+    h3 {
+        padding: 0;
+        margin: 0;
+    }
 `;

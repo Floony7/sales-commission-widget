@@ -14,13 +14,10 @@ function App() {
       console.warn('Invalid amount');
       return;
     }
-    // Calculate and update state object for each commission band
     setRevenue(amount);
-
-    // Clear input
     setInputAmount('');
   };
-  console.log('REVENUE', revenue, inputAmount);
+  // console.log('REVENUE', revenue, inputAmount);
   return (
     <AppWrapper>
       <InnerWrapper>
@@ -40,9 +37,11 @@ function App() {
           <Button type="submit" style={{ marginLeft: '0.5rem' }}>
             Submit
           </Button>
+          <Button onClick={() => setRevenue(0)} style={{ marginLeft: '0.5rem' }}>
+            Reset
+          </Button>
         </form>
         <CommissionCalculator revenue={revenue} />
-        {/* <CommissionChart /> */}
       </InnerWrapper>
     </AppWrapper>
   );
