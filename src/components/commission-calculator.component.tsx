@@ -6,31 +6,33 @@ import { WidgetCard } from './card.component';
 
 export type Breakdown = { band: number; commission: number };
 
-type CommissionBreakdown = {
-  totalCommission: number;
-  breakdown: Breakdown[];
-};
-
-const initialState = {
-  totalCommission: 0,
-  breakdown: [
-    { band: 0, commission: 0 },
-    { band: 5000, commission: 0 },
-    { band: 10000, commission: 0 },
-    { band: 15000, commission: 0 },
-    { band: 20000, commission: 0 },
-  ],
-};
+const initialState = [
+  // { band: 0, commission: 0 },
+  { band: 5000, commission: 0 },
+  { band: 10000, commission: 0 },
+  { band: 15000, commission: 0 },
+  { band: 20000, commission: 0 },
+];
 // Pass calculated values to this component
 export const CommissionCalculator = ({ revenue }: { revenue: number }): JSX.Element => {
-  const [commissionBreakdown, setCommissionBreakdown] = useState<CommissionBreakdown>(initialState);
+  const [commissionBreakdown, setCommissionBreakdown] = useState<Breakdown[]>(initialState);
+  const [totalCommission, setTotalCommission] = useState(0);
 
   useEffect(() => {
-    setCommissionBreakdown(prevCommissionBreakdown => {
-      const { totalCommission, breakdown } = calculateCommission(revenue);
-      const newCommissionBreakdown = { ...prevCommissionBreakdown, totalCommission, breakdown };
-      return newCommissionBreakdown;
+    setCommissionBreakdown(initialState);
+    const { total, breakdown } = calculateCommission(revenue);
+    setTotalCommission(total);
+    const newCommissionState = [...breakdown].map(c => {
+      return {
+        ...c,
+        commission: c.commission,
+      };
     });
+    setCommissionBreakdown(newCommissionState);
+    return () => {
+      setCommissionBreakdown(initialState);
+      setTotalCommission(0);
+    };
   }, [revenue]);
 
   return (
@@ -39,23 +41,25 @@ export const CommissionCalculator = ({ revenue }: { revenue: number }): JSX.Elem
         See a full breakdown of how commission was generated below. <br />
         Note that any sales under {commissionScheme[1].band} do not generate commission.
       </p>
-      <h2>Total Commission: {commissionBreakdown.totalCommission}</h2>
+      <h2>Total Commission: {totalCommission}</h2>
       <WidgetGrid>
-        {commissionBreakdown.breakdown.length > 0
-          ? commissionBreakdown.breakdown.map(item => (
+        {commissionBreakdown.length > 0
+          ? commissionBreakdown.map(item => (
               <WidgetCard band={item.band} commission={item.commission} />
             ))
-          : initialState.breakdown.map(item => (
-              <WidgetCard band={item.band} commission={item.commission} />
-            ))}
+          : initialState.map(item => <WidgetCard band={item.band} commission={item.commission} />)}
       </WidgetGrid>
     </section>
   );
 };
 
-function calculateCommission(revenue: number): CommissionBreakdown {
+type CommissionDetails = {
+  total: number;
+  breakdown: Breakdown[];
+};
+function calculateCommission(revenue: number): CommissionDetails {
   let remainingRevenue = revenue;
-  let totalCommission = 0;
+  let total = 0;
   const breakdown: { band: number; commission: number }[] = [];
 
   for (let i = 1; i < commissionScheme.length; i++) {
@@ -64,12 +68,12 @@ function calculateCommission(revenue: number): CommissionBreakdown {
     if (remainingRevenue > band) {
       const amountInBand = Math.min(remainingRevenue - commissionScheme[i - 1].band, band);
       const commissionForBand = amountInBand * rate;
-      totalCommission += commissionForBand;
+      total += commissionForBand;
       breakdown.push({ band, commission: commissionForBand });
 
       remainingRevenue -= amountInBand;
     }
   }
 
-  return { totalCommission, breakdown };
+  return { total, breakdown };
 }
