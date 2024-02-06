@@ -44,9 +44,11 @@ export const CommissionCalculator = ({ revenue }: { revenue: number }): JSX.Elem
       <WidgetGrid>
         {commissionBreakdown.length > 0
           ? commissionBreakdown.map(item => (
-              <WidgetCard band={item.band} commission={item.commission} />
+              <WidgetCard key={item.band} band={item.band} commission={item.commission} />
             ))
-          : initialState.map(item => <WidgetCard band={item.band} commission={item.commission} />)}
+          : initialState.map(item => (
+              <WidgetCard key={item.band} band={item.band} commission={item.commission} />
+            ))}
       </WidgetGrid>
     </section>
   );
