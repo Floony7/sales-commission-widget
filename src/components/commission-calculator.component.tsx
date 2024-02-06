@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { commissionScheme } from '../utils/constants';
 import { WidgetGrid } from './commission-calculator.styles';
 import { WidgetCard } from './card.component';
-// import { CommissionChart } from './commission-chart.component';
 
 export type Breakdown = { band: number; commission: number };
 
