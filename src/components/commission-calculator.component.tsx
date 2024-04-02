@@ -20,14 +20,10 @@ export const CommissionCalculator = ({ revenue }: { revenue: number }): JSX.Elem
   useEffect(() => {
     setCommissionBreakdown(initialState);
     const { total, breakdown } = calculateCommission(revenue);
+
     setTotalCommission(total);
-    const newCommissionState = [...breakdown].map(c => {
-      return {
-        ...c,
-        commission: c.commission,
-      };
-    });
-    setCommissionBreakdown(newCommissionState);
+    setCommissionBreakdown(breakdown);
+
     return () => {
       setCommissionBreakdown(initialState);
       setTotalCommission(0);
@@ -58,23 +54,40 @@ type CommissionDetails = {
   total: number;
   breakdown: Breakdown[];
 };
-function calculateCommission(revenue: number): CommissionDetails {
-  let remainingRevenue = revenue;
-  let total = 0;
+
+function calculateCommission(amount: number): CommissionDetails {
+  if (amount <= 5000) {
+    return { total: 0, breakdown: [] };
+  }
+  let remainingAmount = amount;
+  let totalCommission = 0;
   const breakdown: { band: number; commission: number }[] = [];
+  const maxBand = commissionScheme[commissionScheme.length - 1].band;
 
   for (let i = 1; i < commissionScheme.length; i++) {
     const { band, rate } = commissionScheme[i];
+    const previousBand = commissionScheme[i - 1].band;
+    let bandAmount: number;
 
-    if (remainingRevenue > band) {
-      const amountInBand = Math.min(remainingRevenue - commissionScheme[i - 1].band, band);
-      const commissionForBand = amountInBand * rate;
-      total += commissionForBand;
-      breakdown.push({ band, commission: commissionForBand });
+    if (amount > band && band !== maxBand) {
+      bandAmount = band - previousBand;
+    } else if (amount > previousBand && amount < band) {
+      bandAmount = amount - previousBand;
+    } else {
+      bandAmount = amount - maxBand;
+    }
 
-      remainingRevenue -= amountInBand;
+    console.log(bandAmount);
+
+    const commission = bandAmount * rate;
+    totalCommission += commission;
+    remainingAmount -= bandAmount;
+    breakdown.push({ band: band, commission: commission });
+
+    if (remainingAmount <= 0) {
+      break;
     }
   }
 
-  return { total, breakdown };
+  return { total: totalCommission, breakdown: breakdown };
 }
